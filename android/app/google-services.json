@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "722204704573",
+    "project_id": "mprprojectsem4",
+    "storage_bucket": "mprprojectsem4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722204704573:android:ece0774670b9cdffb1cf54",
+        "android_client_info": {
+          "package_name": "com.example.mprapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAtwx1gFVQMsyXCOgB0exOritrikLJmRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
