@@ -1,14 +1,25 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  int currentIndex=0;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
       child: Scaffold(
-        body: Center(
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               Padding(
@@ -63,6 +74,9 @@ class Home extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.05,
               ),
+
+
+              //Chips
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -157,6 +171,9 @@ class Home extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.05,
               ),
+
+
+              //Popular Row
               Row(
                 children: [
                   SizedBox(
@@ -187,9 +204,14 @@ class Home extends StatelessWidget {
                   ),
                 ],
               ),
+
+
               SizedBox(
                 height: size.height * 0.03,
               ),
+
+
+              // Popular Cards
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -207,7 +229,7 @@ class Home extends StatelessWidget {
                               color: Colors.grey.shade100,
                               borderRadius:
                                   BorderRadius.circular(size.width * 0.04),),
-                          width: size.width * 0.4,
+                          width: size.width * 0.45,
                           height: size.height * 0.2,
                         ),
                         SizedBox(height: size.height*0.02,),
@@ -227,7 +249,7 @@ class Home extends StatelessWidget {
                               color: Colors.grey.shade100,
                               borderRadius:
                                   BorderRadius.circular(size.width * 0.04)),
-                          width: size.width * 0.4,
+                          width: size.width * 0.45,
                           height: size.height * 0.2,
                         ),
                         SizedBox(height: size.height*0.02,),
@@ -245,7 +267,7 @@ class Home extends StatelessWidget {
                               color: Colors.grey.shade100,
                               borderRadius:
                               BorderRadius.circular(size.width * 0.04)),
-                          width: size.width * 0.4,
+                          width: size.width * 0.45,
                           height: size.height * 0.2,
                         ),
                         SizedBox(height: size.height*0.02,),
@@ -263,7 +285,7 @@ class Home extends StatelessWidget {
                               color: Colors.grey.shade100,
                               borderRadius:
                               BorderRadius.circular(size.width * 0.04)),
-                          width: size.width * 0.4,
+                          width: size.width * 0.45,
                           height: size.height * 0.2,
                         ),
                         SizedBox(height: size.height*0.02,),
@@ -281,7 +303,7 @@ class Home extends StatelessWidget {
                               color: Colors.grey.shade100,
                               borderRadius:
                               BorderRadius.circular(size.width * 0.04)),
-                          width: size.width * 0.4,
+                          width: size.width * 0.45,
                           height: size.height * 0.2,
                         ),
                         SizedBox(height: size.height*0.02,),
@@ -295,8 +317,82 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
+
+              SizedBox(
+                height: size.height * 0.03,
+              ),
+
+
+              //Offers of the day Row
+              Row(
+                children: [
+                  SizedBox(
+                    width: size.width * 0.05,
+                  ),
+                  Text(
+                    "Offers of the day",
+                    style: GoogleFonts.roboto(
+                        fontSize: size.width * 0.07,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Spacer(),
+                  Text(
+                    "View All",
+                    style: GoogleFonts.roboto(
+                        fontSize: size.width * 0.04,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    width: size.width * 0.01,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: size.width * 0.04,
+                  ),
+                  SizedBox(
+                    width: size.width * 0.05,
+                  ),
+                ],
+              ),
+
+
+              SizedBox(
+                height: size.height * 0.03,
+              ),
+
+
+              //Offers Card
+              Container(
+                width: size.width*0.9,
+                height: size.height*0.25,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(size.width*0.06)
+                ),
+              ),
+
+              SizedBox(
+                height: size.height*0.05,
+              ),
             ],
           ),
+        ),
+
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (index){
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          currentIndex: currentIndex,
+          selectedItemColor: Colors.orange,
+          unselectedItemColor: Colors.grey.shade700,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(CupertinoIcons.home),label: "Home"),
+            BottomNavigationBarItem(icon: Icon(CupertinoIcons.heart),label: "Favourites"),
+            BottomNavigationBarItem(icon: Icon(CupertinoIcons.person),label: "Mes"),
+            BottomNavigationBarItem(icon: Icon(CupertinoIcons.cart),label: "Cart"),
+          ],
         ),
       ),
     );
