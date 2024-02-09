@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mprapp/screens/auth/login.dart';
+import 'package:mprapp/screens/auth/signup.dart';
 
-import 'screens/home/home.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +16,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'MPR App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: Home(),
+      home: login(),
     );
   }
 }
