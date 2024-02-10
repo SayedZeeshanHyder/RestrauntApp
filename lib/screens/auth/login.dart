@@ -66,7 +66,7 @@ class login extends StatelessWidget
                       )
                     ),
                   ),
-                  SizedBox(height: size.height*0.03,),
+                  SizedBox(height: size.height*0.01,),
                   Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: size.width*0.035),
