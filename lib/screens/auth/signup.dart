@@ -1,7 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mprapp/screens/home/home.dart';
 
 class SignUp extends StatelessWidget
 {
+
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phonenoController = TextEditingController();
+  final dobController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     
@@ -13,7 +23,7 @@ class SignUp extends StatelessWidget
         elevation: null,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
-        },icon: Icon(Icons.arrow_back),),
+        },icon: const Icon(Icons.arrow_back),),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width*0.1),
@@ -34,12 +44,13 @@ class SignUp extends StatelessWidget
                   borderRadius: BorderRadius.circular(size.width*0.08),
                 ),
                 child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Username",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                    )
+                  controller : usernameController,
+                  decoration: const InputDecoration(
+                    labelText: "Username",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: size.height*0.01,),
@@ -53,12 +64,13 @@ class SignUp extends StatelessWidget
                   borderRadius: BorderRadius.circular(size.width*0.08),
                 ),
                 child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                    )
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: size.height*0.01,),
@@ -72,12 +84,14 @@ class SignUp extends StatelessWidget
                   borderRadius: BorderRadius.circular(size.width*0.08),
                 ),
                 child: TextField(
-                    decoration: InputDecoration(
+                  keyboardType: TextInputType.number,
+                  controller: phonenoController,
+                    decoration: const InputDecoration(
                       labelText: "Phone number",
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                    )
+                    ),
                 ),
               ),
               SizedBox(height: size.height*0.01,),
@@ -91,12 +105,13 @@ class SignUp extends StatelessWidget
                   borderRadius: BorderRadius.circular(size.width*0.08),
                 ),
                 child: TextField(
-                    decoration: InputDecoration(
+                  controller: dobController,
+                    decoration: const InputDecoration(
                       labelText: "Date of Birth",
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                    )
+                    ),
                 ),
               ),
               SizedBox(height: size.height*0.01,),
@@ -110,27 +125,81 @@ class SignUp extends StatelessWidget
                   borderRadius: BorderRadius.circular(size.width*0.08),
                 ),
                 child: TextField(
-                    decoration: InputDecoration(
+                  controller: emailController,
+                    decoration: const InputDecoration(
                       labelText: "Email",
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                    )
+                    ),
                 ),
               ),
               SizedBox(height: size.height*0.05,),
-              Container(
-                alignment: Alignment.center,
-                width: size.width*0.8,
-                height: size.height*0.06,
-                decoration: BoxDecoration(
-                    color: Colors.yellowAccent.shade700,
-                    borderRadius: BorderRadius.circular(size.width*0.06)
+              InkWell(
+
+                splashFactory:NoSplash.splashFactory,
+
+                onTap: () async{
+                  String snackbarmessage="";
+                  if(usernameController.text.isEmpty){
+                    snackbarmessage = "Please Enter Username";
+                  }
+                  else if(passwordController.text.isEmpty)
+                    {
+                      snackbarmessage = "Please Enter Password";
+                    }
+                  else if(phonenoController.text.isEmpty)
+                    {
+                      snackbarmessage = "Please Enter Phone Number";
+                    }
+                  else if(phonenoController.text.length != 10)
+                    {
+                      snackbarmessage = "Invalid Length of Phone Number";
+                    }
+                  else if(dobController.text.isEmpty)
+                    {
+                      snackbarmessage = "Please Enter Date of Birth";
+                    }
+                  else if(emailController.text.isEmpty)
+                    {
+                      snackbarmessage = "Please Enter Email";
+                    }
+                  else
+                    {
+                      FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
+
+                        value.user!.updateDisplayName(usernameController.text);
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: const Text("Account Created Successfully",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                      }).onError((error, stackTrace) {
+                        snackbarmessage = error.toString();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                      });
+                    }
+
+                  if(snackbarmessage!="")
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+
+                    snackbarmessage = "";
+                  }
+
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: size.width*0.8,
+                  height: size.height*0.06,
+                  decoration: BoxDecoration(
+                      color: Colors.yellowAccent.shade700,
+                      borderRadius: BorderRadius.circular(size.width*0.06)
+                  ),
+                  child: Text("Signup",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),),
                 ),
-                child: Text("Signup",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),),
               ),
               SizedBox(height: size.height*0.17,),
-              Text("By clicking on SignUp you agree to the following Terms & Conditions",textAlign: TextAlign.center,),
+              const Text("By clicking on SignUp you agree to the following Terms & Conditions",textAlign: TextAlign.center,),
               SizedBox(height: size.height*0.03,),
             ],
           ),
