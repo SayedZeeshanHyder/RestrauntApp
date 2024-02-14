@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mprapp/apivariables.dart';
 import 'package:mprapp/screens/home/home.dart';
+import 'package:http/http.dart' as https;
 
 class SignUp extends StatelessWidget
 {
 
+  final apilink = ApiVariables.emailApi;
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -166,13 +170,30 @@ class SignUp extends StatelessWidget
                     }
                   else
                     {
-                      FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
+                      FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value) async{
 
                         value.user!.updateDisplayName(usernameController.text);
                         Navigator.pop(context);
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
-
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: const Text("Account Created Successfully",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+
+                        try {
+                          final body = jsonEncode({
+                            "email": emailController.text,
+                            "subject": "Thank you Zeeshan for creating your account from our Restraunt App. Make your First Order and get 10% discount",
+                            "text": "Congratulations Account Created Successfully"
+                          });
+                          final postResp = await https.post(
+                              Uri.parse(apilink), headers: {
+                            'Content-type': 'application/json',
+                          }, body: body);
+
+                          print("Email Sent");
+                        }catch(e)
+                        {
+                          print("Error in Api Call : $e");
+                        }
+
                       }).onError((error, stackTrace) {
                         snackbarmessage = error.toString();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
