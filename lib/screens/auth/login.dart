@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/controllerfiles/loadingcontroller.dart';
 import 'package:mprapp/screens/auth/signup.dart';
 import 'package:get/get.dart';
@@ -35,7 +36,7 @@ class login extends StatelessWidget
               width: size.width,
               height: size.height*0.5,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.brown.shade100,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(size.width*0.1))
               ),
               child: Column(
@@ -55,14 +56,17 @@ class login extends StatelessWidget
                     width: size.width*0.8,
                     height: size.height*0.07,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Colors.brown,
                       borderRadius: BorderRadius.circular(size.width*0.08),
                     ),
                     child: TextField(
+                      style: GoogleFonts.roboto(color: Colors.white),
                       controller: emailController,
-                      decoration: const InputDecoration(
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        labelStyle: GoogleFonts.roboto(color: Colors.white),
                         labelText: "Email",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
                         ),
                       )
@@ -75,14 +79,17 @@ class login extends StatelessWidget
                     width: size.width*0.8,
                     height: size.height*0.07,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Colors.brown,
                       borderRadius: BorderRadius.circular(size.width*0.08),
                     ),
                     child: TextField(
+                      style: GoogleFonts.roboto(color: Colors.white),
                       controller: passwordController,
-                        decoration: const InputDecoration(
+                        cursorColor: Colors.white,
+                        decoration: InputDecoration(
                           labelText: "Password",
-                          border: OutlineInputBorder(
+                          labelStyle: GoogleFonts.roboto(color: Colors.white),
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
                         ),
@@ -115,12 +122,12 @@ class login extends StatelessWidget
                             FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
                               loadingController.loadingCompleted();
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: Text("Welcome ${value.user!.displayName}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.brown,content: Text("Welcome ${value.user!.displayName}",style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),),);
                             });
                           }
                           if(snackbarmessage!="")
                             {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.brown,content: Text(snackbarmessage,style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),),);
                               snackbarmessage = "";
                               loadingController.loadingCompleted();
                             }
@@ -130,13 +137,13 @@ class login extends StatelessWidget
                           width: size.width*0.8,
                           height: size.height*0.06,
                           decoration: BoxDecoration(
-                              color: Colors.yellowAccent.shade700,
+                              color: Colors.brown,
                               borderRadius: BorderRadius.circular(size.width*0.06)
                           ),
                           child: loadingController.isLoading.value ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(color: Colors.black,),
-                          ) : Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),)),
+                            padding: EdgeInsets.all(size.width*0.03),
+                            child: const CircularProgressIndicator(color: Colors.white,),
+                          ) : Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04,color: Colors.white),),),
                     ),
                   ),
                   const Spacer(),

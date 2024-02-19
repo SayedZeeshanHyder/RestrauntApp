@@ -30,6 +30,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.brown.shade100,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.brown.shade100
+        ),
       ),
       home: auth.currentUser!=null ? Home() : login(),
     );

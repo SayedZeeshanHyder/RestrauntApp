@@ -2,19 +2,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/screens/auth/login.dart';
+import 'package:mprapp/screens/home/premiumscreen.dart';
 
-class Home extends StatelessWidget
+class Home extends StatefulWidget
 {
 
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 1500),()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>PremiumScreen())));
+  }
+
   final bottomNavItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
-    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
-    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
-    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
+    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",backgroundColor: Colors.transparent),
+    BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined),label: "Orders",backgroundColor: Colors.transparent),
+    BottomNavigationBarItem(icon: Icon(Icons.dining),label: "Home",backgroundColor: Colors.transparent),
+    BottomNavigationBarItem(icon: Icon(Icons.person),label: "Me",backgroundColor: Colors.transparent),
   ];
 
   final auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -27,7 +41,7 @@ class Home extends StatelessWidget
               SizedBox(
                 height: size.height*0.05,
               ),
-        
+
               //Name Row
               Row(
                 children: [
@@ -57,8 +71,8 @@ class Home extends StatelessWidget
               SizedBox(
                 height: size.height*0.04,
               ),
-        
-        
+
+
               //Search Field Row
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,13 +84,16 @@ class Home extends StatelessWidget
                     width: size.width*0.8,
                     height: size.height*0.07,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: Colors.brown,
                       borderRadius: BorderRadius.circular(size.width*0.05),
                     ),
                     child: TextField(
+                      cursorColor: Colors.white,
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: Icon(Icons.search,color: Colors.white,),
                         hintText: "Search your cravings",
+                        hintStyle: TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                         ),
@@ -89,17 +106,17 @@ class Home extends StatelessWidget
                     height: size.height*0.06,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(size.width*0.03),
-                      color: Colors.yellowAccent.shade700,
+                      color: Colors.brown
                     ),
-                    child: const Icon(Icons.filter_list),
+                    child: const Icon(Icons.filter_list,color: Colors.white,),
                   ),
                 ],
               ),
               SizedBox(
                 height: size.height*0.04,
               ),
-        
-        
+
+
               //Banner Row
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -228,7 +245,7 @@ class Home extends StatelessWidget
                   ],
                 ),
               ),
-        
+
               SizedBox(
                 height: size.height*0.03,
               ),
@@ -239,14 +256,15 @@ class Home extends StatelessWidget
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.black,
-        unselectedLabelStyle: TextStyle(color: Colors.black),
-        selectedItemColor: Colors.yellowAccent.shade700,
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: false,
+        backgroundColor: Colors.brown,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.white,
         selectedLabelStyle: TextStyle(fontSize: size.width*0.04,fontWeight: FontWeight.bold),
         items: bottomNavItems,
         currentIndex: 0,
       ),
     );
   }
-
 }
