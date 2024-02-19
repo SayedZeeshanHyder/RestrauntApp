@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mprapp/controllerfiles/loadingcontroller.dart';
 import 'package:mprapp/screens/home/home.dart';
 import 'package:mprapp/services/emailservice.dart';
 import 'package:mprapp/services/notificationservices.dart';
@@ -14,6 +16,7 @@ class SignUp extends StatelessWidget
   final passwordController = TextEditingController();
   final phonenoController = TextEditingController();
   final dobController = TextEditingController();
+  final loadingController = Get.put(LoadingController());
 
 
   @override
@@ -144,6 +147,9 @@ class SignUp extends StatelessWidget
                 splashFactory:NoSplash.splashFactory,
 
                 onTap: () async{
+
+                  loadingController.loadingStarted();
+
                   String snackbarmessage="";
                   if(usernameController.text.isEmpty){
                     snackbarmessage = "Please Enter Username";
@@ -172,40 +178,46 @@ class SignUp extends StatelessWidget
                     {
                       FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value) async{
 
-                        value.user!.updateDisplayName(usernameController.text);
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: const Text("Account Created Successfully",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                        value.user!.updateDisplayName(usernameController.text).then((value)async{
+                          loadingController.loadingCompleted();
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: const Text("Account Created Successfully",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
 
-                        //Email Api
-                        await EmailServices.sendEmail(emailController.text);
+                          //Email Api
+                          await EmailServices.sendEmail(emailController.text);
 
-                        //Notification Api
-                        await NotiServices.notificationApiCall(usernameController.text);
+                          //Notification Api
+                          await NotiServices.notificationApiCall(usernameController.text);
+                        });
 
                       }).onError((error, stackTrace) {
                         snackbarmessage = error.toString();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                        loadingController.loadingCompleted();
                       });
                     }
 
                   if(snackbarmessage!="")
                   {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
-
                     snackbarmessage = "";
                   }
 
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: size.width*0.8,
-                  height: size.height*0.06,
-                  decoration: BoxDecoration(
-                      color: Colors.yellowAccent.shade700,
-                      borderRadius: BorderRadius.circular(size.width*0.06)
-                  ),
-                  child: Text("Signup",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),),
+                child: Obx(
+                  ()=> Container(
+                    alignment: Alignment.center,
+                    width: size.width*0.8,
+                    height: size.height*0.06,
+                    decoration: BoxDecoration(
+                        color: Colors.yellowAccent.shade700,
+                        borderRadius: BorderRadius.circular(size.width*0.06)
+                    ),
+                    child: loadingController.isLoading.value ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(color: Colors.black,),
+                    ) : Text("Signup",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),)),
                 ),
               ),
               SizedBox(height: size.height*0.17,),

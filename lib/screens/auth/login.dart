@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mprapp/controllerfiles/loadingcontroller.dart';
 import 'package:mprapp/screens/auth/signup.dart';
-
+import 'package:get/get.dart';
 import '../home/home.dart';
 
 class login extends StatelessWidget
 {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final loadingController = Get.put(LoadingController());
 
   @override
   Widget build(BuildContext context) {
@@ -95,45 +97,49 @@ class login extends StatelessWidget
                     ],
                   ),
                   SizedBox(height: size.height*0.05,),
-                  InkWell(
-                    splashFactory: NoSplash.splashFactory,
-
-                    onTap: (){
-                      String snackbarmessage="";
-                      if(emailController.text.isEmpty)
-                        {
-                          snackbarmessage="Please Enter Email";
-                        }
-                      else if(passwordController.text.isEmpty)
-                        {
-                          snackbarmessage="Please Enter Password";
-                        }
-                      else{
-                        FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: Text("Welcome ${value.user!.displayName}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
-                        });
-                      }
-
-                      if(snackbarmessage!="")
-                        {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
-                          snackbarmessage = "";
-                        }
-                    },
-
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: size.width*0.8,
-                      height: size.height*0.06,
-                      decoration: BoxDecoration(
-                        color: Colors.yellowAccent.shade700,
-                        borderRadius: BorderRadius.circular(size.width*0.06)
-                      ),
-                      child: Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),),
+                  Obx(
+                    ()=> InkWell(
+                        splashFactory: NoSplash.splashFactory,
+                        onTap: (){
+                          loadingController.loadingStarted();
+                          String snackbarmessage="";
+                          if(emailController.text.isEmpty)
+                            {
+                              snackbarmessage="Please Enter Email";
+                            }
+                          else if(passwordController.text.isEmpty)
+                            {
+                              snackbarmessage="Please Enter Password";
+                            }
+                          else{
+                            FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
+                              loadingController.loadingCompleted();
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: Text("Welcome ${value.user!.displayName}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                            });
+                          }
+                          if(snackbarmessage!="")
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor:Colors.yellowAccent.shade700,content: Text(snackbarmessage,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
+                              snackbarmessage = "";
+                              loadingController.loadingCompleted();
+                            }
+                        },
+                      child: Container(
+                          alignment: Alignment.center,
+                          width: size.width*0.8,
+                          height: size.height*0.06,
+                          decoration: BoxDecoration(
+                              color: Colors.yellowAccent.shade700,
+                              borderRadius: BorderRadius.circular(size.width*0.06)
+                          ),
+                          child: loadingController.isLoading.value ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(color: Colors.black,),
+                          ) : Text("Login",style: TextStyle(fontWeight: FontWeight.bold,fontSize: size.width*0.04),)),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
