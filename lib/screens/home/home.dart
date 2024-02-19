@@ -6,7 +6,8 @@ import 'package:mprapp/screens/auth/login.dart';
 class Home extends StatelessWidget
 {
 
-  final bottomNavItems = [
+
+  final bottomNavItems = const [
     BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
     BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
     BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",),
@@ -16,9 +17,7 @@ class Home extends StatelessWidget
   final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -233,6 +232,7 @@ class Home extends StatelessWidget
               SizedBox(
                 height: size.height*0.03,
               ),
+
             ],
           ),
         ),

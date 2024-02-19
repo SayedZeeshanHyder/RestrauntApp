@@ -1,13 +1,21 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mprapp/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mprapp/screens/home/home.dart';
+import 'package:mprapp/services/notificationservices.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotiServices.localNotificationInit();
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  FirebaseMessaging.onMessage.listen((message) {
+    print(message.notification!.body);
+    NotiServices.showNotification(message);
+  });
   runApp(MyApp());
 }
 

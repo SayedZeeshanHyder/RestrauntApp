@@ -1,20 +1,20 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:mprapp/apivariables.dart';
 import 'package:mprapp/screens/home/home.dart';
-import 'package:http/http.dart' as https;
+import 'package:mprapp/services/emailservice.dart';
+import 'package:mprapp/services/notificationservices.dart';
 
 class SignUp extends StatelessWidget
 {
 
-  final apilink = ApiVariables.emailApi;
+  final messaging = FirebaseMessaging.instance;
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final phonenoController = TextEditingController();
   final dobController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,22 +177,11 @@ class SignUp extends StatelessWidget
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.yellowAccent.shade700,content: const Text("Account Created Successfully",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),),);
 
-                        try {
-                          final body = jsonEncode({
-                            "email": emailController.text,
-                            "subject": "Thank you Zeeshan for creating your account from our Restraunt App. Make your First Order and get 10% discount",
-                            "text": "Congratulations Account Created Successfully"
-                          });
-                          final postResp = await https.post(
-                              Uri.parse(apilink), headers: {
-                            'Content-type': 'application/json',
-                          }, body: body);
+                        //Email Api
+                        await EmailServices.sendEmail(emailController.text);
 
-                          print("Email Sent");
-                        }catch(e)
-                        {
-                          print("Error in Api Call : $e");
-                        }
+                        //Notification Api
+                        await NotiServices.notificationApiCall(usernameController.text);
 
                       }).onError((error, stackTrace) {
                         snackbarmessage = error.toString();
