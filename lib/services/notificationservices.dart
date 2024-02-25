@@ -23,6 +23,7 @@ class NotiServices
       await https.post(Uri.parse(ApiVariables.notificationApi),headers: ApiVariables.headers,body: body);
 
     }catch(e){
+      print("Error in Notification Api");
       print(e.toString());
     }
   }

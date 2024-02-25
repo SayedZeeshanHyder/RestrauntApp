@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/controllerfiles/loadingcontroller.dart';
 import 'package:mprapp/screens/auth/signup.dart';
 import 'package:get/get.dart';
-import '../home/home.dart';
+import '../../others/images.dart';
+import '../navigation.dart';
 
 class login extends StatelessWidget
 {
@@ -26,8 +27,9 @@ class login extends StatelessWidget
               alignment: Alignment.center,
               width: size.width,
               height: size.height*0.55,
-              color: Colors.blueAccent,
-              child: Icon(Icons.photo),
+              decoration: const BoxDecoration(
+                image: DecorationImage(image: AssetImage(Images.loginImg),fit: BoxFit.cover)
+              ),
             ),
           ),
           Positioned(
@@ -121,8 +123,11 @@ class login extends StatelessWidget
                           else{
                             FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value){
                               loadingController.loadingCompleted();
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Home()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Navigation()));
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.brown,content: Text("Welcome ${value.user!.displayName}",style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),),);
+                            }).onError((error, stackTrace){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.brown,content: Text("Welcome ${error.toString()}",style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),),);
+                              loadingController.loadingCompleted();
                             });
                           }
                           if(snackbarmessage!="")
@@ -137,7 +142,7 @@ class login extends StatelessWidget
                           width: size.width*0.8,
                           height: size.height*0.06,
                           decoration: BoxDecoration(
-                              color: Colors.brown,
+                              color: Colors.brown.shade900,
                               borderRadius: BorderRadius.circular(size.width*0.06)
                           ),
                           child: loadingController.isLoading.value ? Padding(

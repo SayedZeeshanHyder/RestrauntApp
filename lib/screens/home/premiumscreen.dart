@@ -83,10 +83,20 @@ class PremiumScreen extends StatelessWidget
                   padding: EdgeInsets.symmetric(horizontal: size.width*0.03),
                   height: size.height*0.07,
                   decoration: BoxDecoration(
-                    color: Colors.brown,
-                    borderRadius: BorderRadius.circular(size.width*0.03)
+                    borderRadius: BorderRadius.circular(size.width*0.03),
+                    gradient: LinearGradient(
+                        colors: [
+                          Colors.yellow,
+                          Colors.yellow,
+                          Colors.white,
+                          Colors.yellow,
+                          Colors.yellow,
+                        ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
                   ),
-                  child: Text("₹99/Month",style: GoogleFonts.roboto(color: Colors.white,fontWeight: FontWeight.bold,fontSize: size.width*0.045),),
+                  child: Text("₹99/Month",style: GoogleFonts.roboto(color: Colors.blue.shade900,fontWeight: FontWeight.bold,fontSize: size.width*0.045),),
                 ),
                 SizedBox(width: size.width*0.1,),
                 InkWell(
@@ -99,10 +109,16 @@ class PremiumScreen extends StatelessWidget
                     padding: EdgeInsets.symmetric(horizontal: size.width*0.07),
                     height: size.height*0.07,
                     decoration: BoxDecoration(
-                        color: Colors.brown,
+                        color: Colors.brown.shade900,
                         borderRadius: BorderRadius.circular(size.width*0.03)
                     ),
-                    child: Text("Close",style: GoogleFonts.roboto(color: Colors.white,fontWeight: FontWeight.bold,fontSize: size.width*0.045),),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.close,color: Colors.white,),
+                        Text("Close",style: GoogleFonts.roboto(color: Colors.white,fontWeight: FontWeight.bold,fontSize: size.width*0.045),),
+                      ],
+                    ),
                   ),
                 ),
               ],

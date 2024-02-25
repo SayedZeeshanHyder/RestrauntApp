@@ -2,9 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:mprapp/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mprapp/screens/home/home.dart';
+import 'package:mprapp/screens/splash/splashscreen.dart';
 import 'package:mprapp/services/notificationservices.dart';
 
 
@@ -35,7 +34,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.brown.shade100
         ),
       ),
-      home: auth.currentUser!=null ? Home() : login(),
+      home: SplashScreen(),
     );
   }
 }

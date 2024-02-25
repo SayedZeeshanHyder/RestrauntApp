@@ -1,270 +1,475 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mprapp/screens/auth/login.dart';
-import 'package:mprapp/screens/home/premiumscreen.dart';
 
-class Home extends StatefulWidget
-{
+import '../auth/login.dart';
 
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 1500),()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>PremiumScreen())));
-  }
-
-  final bottomNavItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",backgroundColor: Colors.transparent),
-    BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined),label: "Orders",backgroundColor: Colors.transparent),
-    BottomNavigationBarItem(icon: Icon(Icons.dining),label: "Home",backgroundColor: Colors.transparent),
-    BottomNavigationBarItem(icon: Icon(Icons.person),label: "Me",backgroundColor: Colors.transparent),
-  ];
-
+class Home extends StatelessWidget {
+  final searchController = TextEditingController();
   final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: size.height * 0.05,
+          ),
+
+          //Name Row
+          Row(
             children: [
               SizedBox(
-                height: size.height*0.05,
+                width: size.width * 0.05,
               ),
-
-              //Name Row
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: size.width*0.05,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Good Morning ,",style: TextStyle(fontSize: size.width*0.045),),
-                      Text(auth.currentUser!.displayName.toString(),style:  GoogleFonts.roboto(fontWeight: FontWeight.w600,fontSize: size.width*0.09,),),
-                    ],
+                  Text(
+                    "Good Morning,",
+                    style: TextStyle(fontSize: size.width * 0.06,),
                   ),
-                  Spacer(),
-                  InkWell(
-                    splashFactory: NoSplash.splashFactory,
-                    onTap: (){
-                      auth.signOut();
-                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>login()));
-                    },
-                    child: CircleAvatar(
-                      radius: size.width*0.07,
-                      child: Icon(Icons.person),
+                  Text(
+                    auth.currentUser!.displayName.toString(),
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w600,
+                      fontSize: size.width * 0.09,
                     ),
-                  ),
-                  SizedBox(width: size.width*0.05,),
-                ],
-              ),
-              SizedBox(
-                height: size.height*0.04,
-              ),
-
-
-              //Search Field Row
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: size.width*0.02),
-                    alignment: Alignment.center,
-                    width: size.width*0.8,
-                    height: size.height*0.07,
-                    decoration: BoxDecoration(
-                      color: Colors.brown,
-                      borderRadius: BorderRadius.circular(size.width*0.05),
-                    ),
-                    child: TextField(
-                      cursorColor: Colors.white,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search,color: Colors.white,),
-                        hintText: "Search your cravings",
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: size.width*0.12,
-                    height: size.height*0.06,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(size.width*0.03),
-                      color: Colors.brown
-                    ),
-                    child: const Icon(Icons.filter_list,color: Colors.white,),
                   ),
                 ],
               ),
-              SizedBox(
-                height: size.height*0.04,
-              ),
-
-
-              //Banner Row
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(width: size.width*0.04,),
-                    Container(
-                      width: size.width*0.8,
-                      height: size.height*0.2,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://img.freepik.com/free-psd/juicy-burger-week-american-food-banner_23-2148502656.jpg?size=626&ext=jpg&ga=GA1.1.1448711260.1706486400&semt=ais'),fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(size.width*0.07),
-                      ),
-                    ),
-                    SizedBox(width: size.width*0.04,),
-                    Container(
-                      width: size.width*0.8,
-                      height: size.height*0.2,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://img.freepik.com/free-psd/juicy-burger-week-american-food-banner_23-2148502656.jpg?size=626&ext=jpg&ga=GA1.1.1448711260.1706486400&semt=ais'),fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(size.width*0.07),
-                      ),
-                    ),
-                    SizedBox(width: size.width*0.04,),
-                    Container(
-                      width: size.width*0.8,
-                      height: size.height*0.2,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://img.freepik.com/free-psd/juicy-burger-week-american-food-banner_23-2148502656.jpg?size=626&ext=jpg&ga=GA1.1.1448711260.1706486400&semt=ais'),fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(size.width*0.07),
-                      ),
-                    ),
-                    SizedBox(width: size.width*0.04,),
-                    Container(
-                      width: size.width*0.8,
-                      height: size.height*0.2,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://img.freepik.com/free-psd/juicy-burger-week-american-food-banner_23-2148502656.jpg?size=626&ext=jpg&ga=GA1.1.1448711260.1706486400&semt=ais'),fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(size.width*0.07),
-                      ),
-                    ),
-                    SizedBox(width: size.width*0.04,),
-                  ],
-                ),
+              Spacer(),
+              CircleAvatar(
+                radius: size.width*0.08,
+                backgroundColor: Colors.grey.shade100,
+                child: auth.currentUser?.photoURL != null ? Image.network(auth.currentUser!.photoURL.toString()) : Icon(Icons.photo),
               ),
               SizedBox(
-                height: size.height*0.02,
+                width: size.width * 0.05,
               ),
-              Padding(
-                padding: EdgeInsets.only(left: size.width*0.05),
-                child: Text("Popular",style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: size.width*0.07),),
-              ),
-              SizedBox(height: size.height*0.01,),
-
-
-              //Popular Row
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: size.width*0.05,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: size.width*0.03,vertical: size.height*0.02),
-                      width: size.width*0.6,
-                      height: size.height*0.4,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7rhCuQcNj7VA9JH6zINlg9g7qnyuycoxeXuEJCXlflQ&s",),fit: BoxFit.cover),
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(size.width*0.07)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text("Food Name",style: GoogleFonts.roboto(fontSize: size.width*0.07,fontWeight: FontWeight.w500),),
-                          Text("Small Food Description that may include two lines at max",style: GoogleFonts.roboto(fontSize: size.width*0.05),maxLines: 2,overflow: TextOverflow.ellipsis,)
-                        ],
-                      )
-                    ),
-
-                    SizedBox(
-                      width: size.width*0.05,
-                    ),
-                    Container(
-                        padding: EdgeInsets.symmetric(horizontal: size.width*0.03,vertical: size.height*0.02),
-                        width: size.width*0.6,
-                        height: size.height*0.4,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7rhCuQcNj7VA9JH6zINlg9g7qnyuycoxeXuEJCXlflQ&s",),fit: BoxFit.cover),
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(size.width*0.07)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("Food Name",style: GoogleFonts.roboto(fontSize: size.width*0.07,fontWeight: FontWeight.w500),),
-                            Text("Small Food Description that may include two lines at max",style: GoogleFonts.roboto(fontSize: size.width*0.05),maxLines: 2,overflow: TextOverflow.ellipsis,)
-                          ],
-                        )
-                    ),
-
-                    SizedBox(
-                      width: size.width*0.05,
-                    ),
-                    Container(
-                        padding: EdgeInsets.symmetric(horizontal: size.width*0.03,vertical: size.height*0.02),
-                        width: size.width*0.6,
-                        height: size.height*0.4,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7rhCuQcNj7VA9JH6zINlg9g7qnyuycoxeXuEJCXlflQ&s",),fit: BoxFit.cover),
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(size.width*0.07)
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("Food Name",style: GoogleFonts.roboto(fontSize: size.width*0.07,fontWeight: FontWeight.w500),),
-                            Text("Small Food Description that may include two lines at max",style: GoogleFonts.roboto(fontSize: size.width*0.05),maxLines: 2,overflow: TextOverflow.ellipsis,)
-                          ],
-                        )
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                height: size.height*0.03,
-              ),
-
             ],
           ),
-        ),
-      ),
+          SizedBox(
+            height: size.height * 0.04,
+          ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: false,
-        backgroundColor: Colors.brown,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.white,
-        selectedLabelStyle: TextStyle(fontSize: size.width*0.04,fontWeight: FontWeight.bold),
-        items: bottomNavItems,
-        currentIndex: 0,
+          //Search Field Row
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+                alignment: Alignment.center,
+                width: size.width * 0.8,
+                height: size.height * 0.07,
+                decoration: BoxDecoration(
+                  color: Colors.brown,
+                  borderRadius: BorderRadius.circular(size.width * 0.05),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  cursorColor: Colors.white,
+                  style: TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    hintText: "Search your cravings",
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                width: size.width * 0.12,
+                height: size.height * 0.06,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(size.width * 0.03),
+                    color: Colors.brown),
+                child: const Icon(
+                  Icons.filter_list,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: size.height * 0.02,
+          ),
+
+
+          //Daily Special
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.05),
+            child: Text(
+              "Today's Special",
+              style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold, fontSize: size.width * 0.07),
+            ),
+          ),
+          SizedBox(
+            height: size.height*0.015,
+          ),
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("Menu")
+                  .doc('special')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox(
+                    width: size.width,
+                    height: size.height * 0.3,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.brown.shade900,
+                      ),
+                    ),
+                  );
+                }
+
+                final imgUrl = snapshot.data!.data()!['imgUrl'];
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: size.width*0.03,),
+                  width: size.width,
+                  height: size.height * 0.3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(size.width*0.09),
+                    image: DecorationImage(image: NetworkImage(imgUrl),fit: BoxFit.cover),
+                  ),
+                );
+              }),
+
+          SizedBox(
+            height: size.height * 0.02,
+          ),
+          ListTile(
+            title: Text("Popular",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+
+          //Popular Row
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return foodCard(size, items[index]);
+                        });
+                  }),
+            ),
+          ),
+
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+
+
+          //Veg
+          ListTile(
+            title: Text("Veg",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          if(items[index]['isVeg']) {
+                            return foodCard(size, items[index]);
+                          }
+                          return SizedBox();
+                        });
+                  }),
+            ),
+          ),
+
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+
+
+
+
+
+          //NonVeg
+          ListTile(
+            title: Text("NonVeg",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          if(!items[index]['isVeg']) {
+                            return foodCard(size, items[index]);
+                          }
+                          return const SizedBox();
+                        });
+                  }),
+            ),
+          ),
+
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+
+
+
+
+          //Starters
+          ListTile(
+            title: Text("Starters",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          if(items[index]['category']=='Breakfast') {
+                            return foodCard(size, items[index]);
+                          }
+                          return const SizedBox();
+                        });
+                  }),
+            ),
+          ),
+
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+
+
+
+
+          //Starters
+          ListTile(
+            title: Text("Main Course",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          if(items[index]['category']=='Main Course') {
+                            return foodCard(size, items[index]);
+                          }
+                          return const SizedBox();
+                        });
+                  }),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+
+
+
+
+          //Deserts
+          ListTile(
+            title: Text("Deserts",style: GoogleFonts.roboto(
+                fontWeight: FontWeight.bold, fontSize: size.width * 0.07),),
+            trailing: InkWell(
+              onTap: (){},
+              child: Icon(CupertinoIcons.right_chevron,color: Colors.black,size: size.width*0.07,),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: size.width * 0.04),
+            child: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Menu")
+                      .doc("Menu")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    List items = snapshot.data!.data()!["items"];
+                    return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          if(items[index]['category']=='Desserts') {
+                            return foodCard(size, items[index]);
+                          }
+                          return const SizedBox();
+                        });
+                  }),
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+        ],
       ),
     );
+  }
+
+  Widget foodCard(Size size, item) {
+    return Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.03, vertical: size.height * 0.02),
+        width: size.width * 0.6,
+        margin: EdgeInsets.only(right: size.width * 0.05),
+        decoration: BoxDecoration(
+            // image: DecorationImage(image: NetworkImage(item["imgUrl"],),fit: BoxFit.cover),
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(size.width * 0.07)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              item["name"],
+              style: GoogleFonts.roboto(
+                  fontSize: size.width * 0.07, fontWeight: FontWeight.w500),
+            ),
+            Text(
+              item["description"],
+              style: GoogleFonts.roboto(fontSize: size.width * 0.05),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text("Ratings : ${item["ratings"].toString()}"),
+          ],
+        ));
   }
 }
