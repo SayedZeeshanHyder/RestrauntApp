@@ -450,7 +450,7 @@ class Home extends StatelessWidget {
         width: size.width * 0.6,
         margin: EdgeInsets.only(right: size.width * 0.05),
         decoration: BoxDecoration(
-            // image: DecorationImage(image: NetworkImage(item["imgUrl"],),fit: BoxFit.cover),
+            image: DecorationImage(image: NetworkImage(item["imgUrl"],),fit: BoxFit.cover),
             color: Colors.grey.shade200,
             borderRadius: BorderRadius.circular(size.width * 0.07)),
         child: Column(
@@ -460,15 +460,15 @@ class Home extends StatelessWidget {
             Text(
               item["name"],
               style: GoogleFonts.roboto(
-                  fontSize: size.width * 0.07, fontWeight: FontWeight.w500),
+                  fontSize: size.width * 0.07, fontWeight: FontWeight.w500,color: Colors.white),
             ),
             Text(
               item["description"],
-              style: GoogleFonts.roboto(fontSize: size.width * 0.05),
+              style: GoogleFonts.roboto(fontSize: size.width * 0.05,color: Colors.white),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            Text("Ratings : ${item["ratings"].toString()}"),
+            Text("Ratings : ${item["ratings"].toString()}",style: GoogleFonts.roboto(color: Colors.white),),
           ],
         ));
   }

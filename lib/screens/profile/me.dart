@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/screens/home/premiumscreen.dart';
+import 'package:mprapp/screens/profile/settings.dart';
 import 'package:mprapp/services/authservices.dart';
 
-class Me extends StatelessWidget
-{
-
+class Me extends StatelessWidget {
   final auth = FirebaseAuth.instance;
 
   @override
@@ -18,149 +17,240 @@ class Me extends StatelessWidget
     Size size = MediaQuery.of(context).size;
 
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection("Users").doc(auth.currentUser!.uid).snapshots(),
-      builder: (context, snapshot) {
-
-        List orders;
-        List vouchers;
-        List friends;
-        bool isGold;
-        if(snapshot.connectionState == ConnectionState.waiting)
-        {
-          orders=[];
-          vouchers=[];
-          friends=[];
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.brown.shade900,
-            ),
-          );
-        }
-        else {
-          final data = snapshot.data!.data();
-          orders = data!['orders'];
-          vouchers = data['vouchers'];
-          friends = data['friends'];
-          isGold = data['isGold'];
-        }
-
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-
-              SizedBox(
-                height: size.height*0.08,
+        stream: FirebaseFirestore.instance
+            .collection("Users")
+            .doc(auth.currentUser!.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          List orders;
+          List vouchers;
+          List friends;
+          bool isGold;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            orders = [];
+            vouchers = [];
+            friends = [];
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.brown.shade900,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    radius: size.width*0.08,
-                    backgroundColor: Colors.grey.shade100,
-                    child: auth.currentUser?.photoURL != null ? Image.network(auth.currentUser!.photoURL.toString()) : Icon(Icons.photo),
-                  ),
+            );
+          } else {
+            final data = snapshot.data!.data();
+            orders = data!['orders'];
+            vouchers = data['vouchers'];
+            friends = data['friends'];
+            isGold = data['isGold'];
+          }
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(vouchers.length.toString(),style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: size.width*0.06),),
-                      Text("Vouchers")
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(orders.length.toString(),style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: size.width*0.06),),
-                      Text("Orders")
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(friends.length.toString(),style: GoogleFonts.roboto(fontWeight: FontWeight.bold,fontSize: size.width*0.06),),
-                      Text("Friends"),
-                    ],
-                  ),
-
-                ],
-              ),
-              SizedBox(
-                height: size.height*0.05,
-              ),
-              InkWell(
-                onTap: (){
-                  if(!isGold)
-                    {
-                      Get.to(()=>PremiumScreen(),transition: Transition.downToUp);
-                    }
-                },
-                child: Container(
-                  width: size.width*0.9,
-                  height: size.height*0.07,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(size.width*0.07),
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.yellow.shade600,
-                        Colors.white,
-                        Colors.yellow.shade600,
-                        Colors.white,
-                        Colors.yellow.shade600,
-                        Colors.white,
-                        Colors.yellow.shade600,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height * 0.04,
+                ),
+                SizedBox(
+                  width: size.width,
+                  child: Card(
+                    color: Colors.brown,
+                    elevation: 15,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: size.height*0.015),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            radius: size.width * 0.175,
+                            backgroundColor: Colors.white,
+                          ),
+                          SizedBox(height: size.height*0.025,),
+                          Text(
+                            auth.currentUser!.displayName.toString(),
+                            style: GoogleFonts.roboto(
+                                fontSize: size.width * 0.08,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(isGold ? "Gold Member" : "Become a Gold Member",style: GoogleFonts.roboto(color: Colors.purple,fontWeight: FontWeight.bold,fontSize: size.width*0.05),),
-                      if(isGold)
-                        Icon(Icons.check,color: Colors.purple,)
-                    ],
+                ),
+                Card(
+                  elevation: 15,
+                  color: Colors.brown,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: size.height*0.015),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              orders.length.toString(),
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.08,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Orders",
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              vouchers.length.toString(),
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.08,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Vouchers",
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              friends.length.toString(),
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.08,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Friends",
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(
-                height: size.height*0.04,
-              ),
-              Divider(color: Colors.brown.shade900,),
-              ListTile(
-                title: Text("My Vouchers",style: GoogleFonts.roboto(fontSize: size.width*0.05),),
-                trailing: Icon(Icons.redeem),
-              ),
-              Divider(color: Colors.brown.shade900,),
-              ListTile(
-                title: Text("Previous Orders",style: GoogleFonts.roboto(fontSize: size.width*0.05),),
-                trailing: Icon(Icons.food_bank),
-              ),
-              Divider(color: Colors.brown.shade900,),
-              ListTile(
-                title: Text("Settings",style: GoogleFonts.roboto(fontSize: size.width*0.05),),
-                trailing: Icon(Icons.settings),
-              ),
-              Divider(color: Colors.brown.shade900,),
-              ListTile(
-                title: Text("Help",style: GoogleFonts.roboto(fontSize: size.width*0.05),),
-                trailing: Icon(Icons.help),
-              ),
-              Divider(color: Colors.brown.shade900,),
-              ListTile(
-                onTap: (){
-                  AuthServices.signOut(context);
-                },
-                title: Text("Log Out",style: GoogleFonts.roboto(fontSize: size.width*0.05),),
-                trailing: Icon(Icons.logout),
-              ),
-              Divider(color: Colors.brown.shade900,),
-            ],
-          ),
-        );
-      }
-    );
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    leading: Icon(Icons.headset_mic_outlined,color: Colors.white,),
+                    title: Text(
+                      "Complaint",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    leading: Icon(Icons.report,color: Colors.white,),
+                    title: Text(
+                      "Report",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    leading: Icon(Icons.help,color: Colors.white,),
+                    title: Text(
+                      "Help",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    leading: Icon(Icons.web,color: Colors.white,),
+                    title: Text(
+                      "Our Website",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                InkWell(
+                  splashFactory: NoSplash.splashFactory,
+                  onTap: (){
+                    Get.to(()=>SettingsScreen(),transition: Transition.rightToLeft);
+                  },
+                  child: Card(
+                    color: Colors.brown,
+                    elevation: 15,
+                    child: ListTile(
+                      leading: Icon(Icons.settings,color: Colors.white,),
+                      title: Text(
+                        "Settings",
+                        style: GoogleFonts.roboto(
+                            fontSize: size.width * 0.05,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    leading: Icon(Icons.web,color: Colors.white,),
+                    title: Text(
+                      "KYC (Know your Chef)",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: size.height*0.04,
+                ),
+              ],
+            ),
+          );
+        });
   }
-
 }
