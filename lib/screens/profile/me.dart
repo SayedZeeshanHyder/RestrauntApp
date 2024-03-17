@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mprapp/screens/home/premiumscreen.dart';
+import 'package:mprapp/apivariables.dart';
 import 'package:mprapp/screens/profile/settings.dart';
-import 'package:mprapp/services/authservices.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Me extends StatelessWidget {
   final auth = FirebaseAuth.instance;
@@ -198,6 +198,9 @@ class Me extends StatelessWidget {
                   color: Colors.brown,
                   elevation: 15,
                   child: ListTile(
+                    onTap: (){
+                      launchUrl(Uri.parse(ApiVariables.webUrl),);
+                    },
                     leading: Icon(Icons.web,color: Colors.white,),
                     title: Text(
                       "Our Website",

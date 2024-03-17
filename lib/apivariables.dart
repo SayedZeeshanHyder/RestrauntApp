@@ -8,4 +8,7 @@ class ApiVariables
   static const headers = {
   'Content-type': 'application/json',
   };
+
+
+  static const webUrl = 'https://www.tripadvisor.in/Restaurant_Review-g304554-d5071038-Reviews-Crimson_Navi_Mumbai-Mumbai_Maharashtra.html';
 }

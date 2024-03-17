@@ -35,7 +35,7 @@ class _NavigationState extends State<Navigation> {
 
   final bottomNavItems = const [
     BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home",backgroundColor: Colors.transparent),
-    BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined),label: "Orders",backgroundColor: Colors.transparent),
+    BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined),label: "Order",backgroundColor: Colors.transparent),
     BottomNavigationBarItem(icon: Icon(Icons.handshake),label: "Friends",backgroundColor: Colors.transparent),
     BottomNavigationBarItem(icon: Icon(Icons.person),label: "Me",backgroundColor: Colors.transparent),
   ];
