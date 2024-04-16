@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/screens/auth/login.dart';
+import 'package:mprapp/screens/qr/qrscanner.dart';
 import 'package:mprapp/services/imageservice.dart';
 
 class AdminHome extends StatelessWidget
 {
   final auth = FirebaseAuth.instance;
+  final bookingCollection = FirebaseFirestore.instance.collection("Booking");
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -91,7 +94,35 @@ class AdminHome extends StatelessWidget
           ),
         ),
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: startScan,
+        child: Icon(Icons.qr_code_scanner),
+      ),
     );
   }
 
+  startScan()
+  async{
+    try {
+      final scanQr = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      if(scanQr.isNotEmpty) {
+        checkIn(scanQr);
+      }
+      else{
+        Get.snackbar("Error Occured", "Invalid QR Code Detected");
+      }
+    }catch(e) {
+      print("Error: ${e.toString()}");
+    }
+
+  }
+
+  checkIn(String bookingId)
+  {
+    bookingCollection.doc(bookingId).update({
+      "isChecked":true,
+    });
+  }
 }

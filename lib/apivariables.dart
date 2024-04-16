@@ -9,6 +9,9 @@ class ApiVariables
   'Content-type': 'application/json',
   };
 
+  static const gemApiKey = 'AIzaSyCjeib_v_TYW1BlXWh8mjK1vUyePVRQRQk';
+  static const gemApi = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$gemApiKey';
+
 
   static const webUrl = 'https://www.tripadvisor.in/Restaurant_Review-g304554-d5071038-Reviews-Crimson_Navi_Mumbai-Mumbai_Maharashtra.html';
 }

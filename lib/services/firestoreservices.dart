@@ -10,7 +10,7 @@ class FirestoreServices
   async {
     final deviceToken = await FirebaseMessaging.instance.getToken();
     final auth = FirebaseAuth.instance.currentUser;
-    UserModel userModel = UserModel(deviceToken: deviceToken.toString(),uid: auth!.uid, phoneNo: int.parse(phoneNo), email: auth.email.toString(), dob: dob, orders: [], isGold: false, vouchers: [], prevOrders: [], friends: []);
+    UserModel userModel = UserModel(deviceToken: deviceToken.toString(),uid: auth!.uid, phoneNo: int.parse(phoneNo), email: auth.email.toString(), dob: dob, orders: [], isGold: false, vouchers: [], prevOrders: [], friends: [], bookings: []);
 
     try {
       final addUserDb = await FirebaseFirestore.instance.collection("Users")

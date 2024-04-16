@@ -1,124 +1,315 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:mprapp/screens/orders/mybookings.dart';
+import 'package:uuid/uuid.dart';
+import 'package:mprapp/controllerfiles/tablecontroller.dart';
 
-class MyOrders extends StatelessWidget
-{
+class MyOrders extends StatelessWidget {
+  final tableController = Get.put(TableController());
+  var uuid = const Uuid();
+  final userCollection = FirebaseFirestore.instance.collection("Users");
+  final bookingCollection = FirebaseFirestore.instance.collection("Booking");
+  final auth = FirebaseAuth.instance;
 
-  final CarouselController cc = CarouselController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return ListView.builder(physics: const BouncingScrollPhysics(),itemCount: 3,itemBuilder: (context,index){
-      return tableCard(size, context);
-    });
-  }
-
-  Widget tableCard(Size size,BuildContext context){
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          height: size.height*0.02,
-        ),
-        CarouselSlider(
-          carouselController: cc,
-          options: CarouselOptions(height: size.height*0.3,reverse: true,enableInfiniteScroll: true),
-          items: [1,2,3,4,5].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: size.width*0.02),
-                  width: size.width*0.9,
-                  height: size.height*0.24,
-                  decoration: BoxDecoration(
-                    color: Colors.brown,
-                    borderRadius: BorderRadius.circular(size.width*0.03),
-                  ),
-                  child: Text(i.toString()),
-                );
-              },
-            );
-          }).toList(),
-        ),
-        SizedBox(
-          height: size.height*0.02,
-        ),
-        Row(
-          children: [
-            SizedBox(width: size.width*0.06,),
-            Text("Table 2",style: GoogleFonts.roboto(fontSize: size.width*0.06,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-            Spacer(),
-            Text("2 Seats",style: GoogleFonts.roboto(fontSize: size.width*0.06,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-            SizedBox(width: size.width*0.06,),
-          ],
-        ),
-        SizedBox(
-          height: size.height*0.02,
+          height: size.height * 0.05,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              alignment: Alignment.center,
-              width: size.width*0.45,
-              height: size.height*0.06,
-              decoration: BoxDecoration(
-                color: Colors.brown,
-                borderRadius: BorderRadius.circular(size.width*0.03),
-              ),
-              child: Text("Save for later",style: GoogleFonts.roboto(color: Colors.white,fontSize: size.width*0.05,fontWeight: FontWeight.bold),),
+            Text(
+              "Persons",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: size.width * 0.06),
             ),
-            Container(
-              alignment: Alignment.center,
-              width: size.width*0.45,
-              height: size.height*0.06,
-              decoration: BoxDecoration(
-                color: Colors.brown,
-                borderRadius: BorderRadius.circular(size.width*0.03),
-              ),
-              child: Text("Book Table",style: GoogleFonts.roboto(color: Colors.white,fontSize: size.width*0.05,fontWeight: FontWeight.bold),),
+            DropdownMenu(
+              width: size.width * 0.4,
+              initialSelection: "2",
+              onSelected: (val) {
+                tableController.val.value = int.parse(val.toString());
+              },
+              dropdownMenuEntries: const [
+                DropdownMenuEntry(value: "2", label: "2 people"),
+                DropdownMenuEntry(value: "3", label: "3 people"),
+                DropdownMenuEntry(value: "4", label: "4 people"),
+                DropdownMenuEntry(value: "5", label: "5 people"),
+                DropdownMenuEntry(value: "8", label: ">5 people"),
+              ],
             ),
+            ElevatedButton(onPressed: ()async{
+              final bookId = uuid.v4();
+              final get = await userCollection.doc(auth.currentUser!.uid).get();
+              List listOfBookings = get.data()!["bookings"];
+              listOfBookings.add({
+                "bookingId" : bookId,
+                "user":auth.currentUser!.uid,
+                "persons": tableController.val.value,
+                "dateTime": DateTime.now(),
+              });
+              await userCollection.doc(auth.currentUser!.uid).update({
+                "bookings":listOfBookings
+              });
+
+              await bookingCollection.doc(bookId).set({
+                "isChecked":false
+              });
+              Get.to(()=>MyBookings());
+            }, child: Text("Book"),),
+
           ],
         ),
         SizedBox(
-          height: size.height*0.01,
+          height: size.height * 0.01,
         ),
-        Divider(
-          thickness: size.height*0.005,
-          color: Colors.brown,
+        Expanded(
+          child: Obx(
+            () => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                      (tableController.val.value == 2 ||
+                              tableController.val.value == 4)
+                          ? 'assets/tables1.jpg'
+                          : 'assets/tables2.jpg',
+                    ),
+                    fit: BoxFit.contain),
+              ),
+              child: Obx(() => stacks(size)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget stacks(Size size) {
+    if (tableController.val.value == 4) {
+      return Stack(
+        children: [
+          //Left Tables
+          Positioned(
+            top: size.height * 0.055,
+            left: size.width * 0.055,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.2,
+            left: size.width * 0.055,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.344,
+            left: size.width * 0.055,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          //Right Tables
+          Positioned(
+            top: size.height * 0.055,
+            right: size.width * 0.042,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.2,
+            right: size.width * 0.042,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.344,
+            right: size.width * 0.042,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else if (tableController.val.value == 2) {
+      return Stack(
+        children: [
+          Positioned(
+            top: size.height * 0.055,
+            left: size.width * 0.42,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.2,
+            left: size.width * 0.42,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    else if(tableController.val.value == 5) {
+      return Stack(
+        children: [
+          Positioned(
+            top: size.height * 0.09,
+            left: size.width * 0.37,
+            child: Container(
+              width: size.width * 0.22,
+              height: size.height * 0.053,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.09,
+            left: size.width * 0.038,
+            child: Container(
+              width: size.width * 0.22,
+              height: size.height * 0.053,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size.width * 0.02),
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    else if (tableController.val.value == 3) {
+      return Stack(
+        children: [
+          Positioned(
+            bottom: size.height * 0.096,
+            left: size.width * 0.4,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: size.height * 0.096,
+            left: size.width * 0.21,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: size.height * 0.096,
+            left: size.width * 0.016,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: size.height * 0.096,
+            left: size.width * 0.59,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: size.height * 0.096,
+            left: size.width * 0.785,
+            child: Container(
+              width: size.width * 0.175,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Stack(
+      children: [
+        Positioned(
+          top: size.height * 0.305,
+          left: size.width * 0.14,
+          child: Container(
+            width: size.width * 0.44,
+            height: size.height * 0.06,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(size.width * 0.02),
+              color: Colors.green,
+            ),
+          ),
         ),
       ],
     );
   }
 }
-
-/*
-Container(
-margin: EdgeInsets.symmetric(
-horizontal: size.width*0.07
-),
-alignment: Alignment.center,
-decoration: BoxDecoration(
-color: Colors.brown,
-borderRadius: BorderRadius.circular(size.width*0.05)
-),
-padding: EdgeInsets.symmetric(
-horizontal: size.width*0.07,
-),
-child: TextField(
-onTap: ()async{
-final date = await showDatePicker(context: context,firstDate: DateTime(2024), lastDate: DateTime(2050),);
-if(date!=null){
-print(date);
-}
-},
-cursorColor: Colors.white,
-decoration: InputDecoration(
-border: InputBorder.none,
-labelStyle: GoogleFonts.roboto(color: Colors.white),
-labelText: "Select Date",
-suffixIcon: Icon(Icons.calendar_today,color: Colors.white,),
-),
-),
-),*/

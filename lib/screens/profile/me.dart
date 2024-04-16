@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/apivariables.dart';
+import 'package:mprapp/screens/orders/mybookings.dart';
 import 'package:mprapp/screens/profile/settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -185,6 +186,24 @@ class Me extends StatelessWidget {
                     leading: Icon(Icons.help,color: Colors.white,),
                     title: Text(
                       "Help",
+                      style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.05,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.brown,
+                  elevation: 15,
+                  child: ListTile(
+                    onTap: (){
+                      Get.to(()=> MyBookings());
+                    },
+                    leading: Icon(Icons.table_bar_rounded,color: Colors.white,),
+                    title: Text(
+                      "My Bookings",
                       style: GoogleFonts.roboto(
                           fontSize: size.width * 0.05,
                           color: Colors.white,

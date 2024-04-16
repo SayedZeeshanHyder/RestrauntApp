@@ -3,6 +3,7 @@ class UserModel {
     required this.uid,
     required this.phoneNo,
     required this.email,
+    required this.bookings,
     required this.dob,
     required this.orders,
     required this.isGold,
@@ -12,6 +13,7 @@ class UserModel {
     required this.deviceToken
   });
   late final String uid;
+  late final List<dynamic> bookings;
   late final String deviceToken;
   late final int phoneNo;
   late final String email;
@@ -33,6 +35,7 @@ class UserModel {
     vouchers = List.castFrom<dynamic, dynamic>(json['vouchers']);
     prevOrders = List.castFrom<dynamic, dynamic>(json['prevOrders']);
     friends = List.castFrom<dynamic,dynamic>(json['friends']);
+    bookings = List.castFrom<dynamic,dynamic>(json['bookings']);
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class UserModel {
     data['vouchers'] = vouchers;
     data['prevOrders'] = prevOrders;
     data['friends'] = friends;
+    data['bookings'] = bookings;
     return data;
   }
 }
