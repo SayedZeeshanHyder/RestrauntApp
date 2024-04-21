@@ -5,8 +5,10 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mprapp/screens/auth/login.dart';
-import 'package:mprapp/screens/qr/qrscanner.dart';
+import 'package:mprapp/screens/staff/reciepegenerator.dart';
 import 'package:mprapp/services/imageservice.dart';
+
+import 'getuserinfo.dart';
 
 class AdminHome extends StatelessWidget
 {
@@ -42,7 +44,7 @@ class AdminHome extends StatelessWidget
 
                   if(snapshot.connectionState == ConnectionState.waiting)
                     {
-                      return Container(
+                      return SizedBox(
                         width: size.width*0.93,
                         height: size.height*0.25,
                         child: const Center(
@@ -90,6 +92,24 @@ class AdminHome extends StatelessWidget
                 color: Colors.brown,
                 thickness: size.width*0.01,
               ),
+              SizedBox(
+                height: size.height*0.01,
+              ),
+              InkWell(
+                onTap: (){
+                  Get.to(()=> ReciepeGenerator(),transition: Transition.rightToLeft);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: size.width*0.75,
+                  height: size.height*0.056,
+                  decoration: BoxDecoration(
+                    color: Colors.brown,
+                    borderRadius: BorderRadius.circular(size.width*0.03),
+                  ),
+                  child: Text("Reciepe Generator ChatBot",style: GoogleFonts.roboto(color: Colors.white,fontSize: size.width*0.045),),
+                ),
+              ),
             ],
           ),
         ),
@@ -97,7 +117,7 @@ class AdminHome extends StatelessWidget
 
       floatingActionButton: FloatingActionButton(
         onPressed: startScan,
-        child: Icon(Icons.qr_code_scanner),
+        child: const Icon(Icons.qr_code_scanner),
       ),
     );
   }
@@ -107,7 +127,7 @@ class AdminHome extends StatelessWidget
     try {
       final scanQr = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      if(scanQr.isNotEmpty) {
+      if(scanQr != "-1") {
         checkIn(scanQr);
       }
       else{
@@ -120,9 +140,21 @@ class AdminHome extends StatelessWidget
   }
 
   checkIn(String bookingId)
-  {
-    bookingCollection.doc(bookingId).update({
-      "isChecked":true,
-    });
+  async{
+    final getStatus = await bookingCollection.doc(bookingId).get();
+    final bool isCheckedIn = getStatus.data()!["isCheckedIn"];
+    if(isCheckedIn)
+      {
+        await bookingCollection.doc(bookingId).update({
+          "isCheckedOut": true,
+        });
+        final userId = getStatus.data()!["userId"];
+        Get.to(()=> GetUserInfo(userId: userId,),);
+      }
+    else {
+      bookingCollection.doc(bookingId).update({
+        "isCheckedIn": true,
+      });
+    }
   }
 }

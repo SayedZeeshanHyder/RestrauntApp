@@ -3,15 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mprapp/screens/orders/mybookings.dart';
+import 'package:mprapp/screens/orders/orderinfo.dart';
 import 'package:uuid/uuid.dart';
 import 'package:mprapp/controllerfiles/tablecontroller.dart';
 
 class MyOrders extends StatelessWidget {
   final tableController = Get.put(TableController());
-  var uuid = const Uuid();
-  final userCollection = FirebaseFirestore.instance.collection("Users");
-  final bookingCollection = FirebaseFirestore.instance.collection("Booking");
-  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +40,8 @@ class MyOrders extends StatelessWidget {
                 DropdownMenuEntry(value: "8", label: ">5 people"),
               ],
             ),
-            ElevatedButton(onPressed: ()async{
-              final bookId = uuid.v4();
-              final get = await userCollection.doc(auth.currentUser!.uid).get();
-              List listOfBookings = get.data()!["bookings"];
-              listOfBookings.add({
-                "bookingId" : bookId,
-                "user":auth.currentUser!.uid,
-                "persons": tableController.val.value,
-                "dateTime": DateTime.now(),
-              });
-              await userCollection.doc(auth.currentUser!.uid).update({
-                "bookings":listOfBookings
-              });
-
-              await bookingCollection.doc(bookId).set({
-                "isChecked":false
-              });
-              Get.to(()=>MyBookings());
+            ElevatedButton(onPressed: (){
+              Get.to(()=>OrderInfo());
             }, child: Text("Book"),),
 
           ],

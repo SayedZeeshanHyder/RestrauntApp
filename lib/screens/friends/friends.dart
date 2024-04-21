@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mprapp/apivariables.dart';
@@ -12,7 +13,8 @@ class Friends extends StatefulWidget {
 }
 
 class _FriendsState extends State<Friends> {
-  ChatUser myself = ChatUser(id: '1', firstName: 'manishh');
+  static final auth = FirebaseAuth.instance;
+  ChatUser myself = ChatUser(id: '1', firstName: auth.currentUser!.displayName.toString());
   ChatUser bot = ChatUser(id: '2', firstName: 'Restaurant ChatBot');
 
   List<ChatMessage> allMessages = [];
@@ -41,7 +43,6 @@ class _FriendsState extends State<Friends> {
       if (value.statusCode == 200) {
         var result = jsonDecode(value.body);
         print(result['candidates'][0]['content']['parts'][0]['text']);
-
         ChatMessage m1 = ChatMessage(
             text: result['candidates'][0]['content']['parts'][0]['text'],
             user: bot,

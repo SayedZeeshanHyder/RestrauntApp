@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mprapp/screens/qr/qrscanner.dart';
-import 'package:mprapp/screens/qr/showqr.dart';
 import 'package:mprapp/screens/splash/splashscreen.dart';
 import 'package:mprapp/services/notificationservices.dart';
 
@@ -33,7 +31,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.brown.shade100,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.brown.shade100
+          backgroundColor: Colors.brown.shade100,
+          foregroundColor: Colors.white
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.brown,
+          foregroundColor: Colors.white,
         ),
       ),
       home: SplashScreen()

@@ -26,6 +26,11 @@ migrate_working_dir/
 
 /lib/firebase_options.dart
 /lib/apivariables.dart
+/android
+/ios
+/linux
+/macos
+/windows
 
 **/doc/api/
 **/ios/Flutter/.last_build_id
