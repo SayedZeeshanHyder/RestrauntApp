@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mprapp/screens/home/showpdf.dart';
 
 import '../auth/login.dart';
 
@@ -44,10 +46,19 @@ class Home extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              CircleAvatar(
-                radius: size.width*0.08,
-                backgroundColor: Colors.grey.shade100,
-                child: auth.currentUser?.photoURL != null ? Image.network(auth.currentUser!.photoURL.toString()) : Icon(Icons.photo),
+              Text("Menu",style: TextStyle(color: Colors.brown,fontSize: size.width*0.05),),
+              SizedBox(
+                width: size.width*0.03,
+              ),
+              InkWell(
+                onTap: (){
+                  Get.to(()=> ShowPdf(),transition: Transition.rightToLeft);
+                },
+                child: CircleAvatar(
+                  radius: size.width*0.08,
+                  backgroundColor: Colors.brown,
+                  child: Icon(Icons.picture_as_pdf,color: Colors.white,),
+                ),
               ),
               SizedBox(
                 width: size.width * 0.05,
